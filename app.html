@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <title>Julia Penrose — Web App</title>
+  <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --apple-bg: #f5f5f7;
+      --apple-dark: #1d1d1f;
+      --apple-mid: #3a3a3c;
+      --apple-subtle: #6e6e73;
+      --apple-blue: #0071e3;
+      --apple-border: rgba(0,0,0,0.08);
+      --apple-white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0d1117;
+      margin: 0;
+    }
+
+    /* ── NAV ── */
+    #mainNav {
+      background: rgba(13,17,23,0.88);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0;
+      height: 48px;
+    }
+    #mainNav .container { max-width: 1200px; }
+    .navbar-brand {
+      font-size: 17px;
+      font-weight: 600;
+      color: #fff !important;
+      letter-spacing: -0.02em;
+    }
+    .nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55) !important;
+      padding: 0 14px !important;
+      line-height: 48px;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: #fff !important; }
+    .nav-link.active-page { color: var(--apple-blue) !important; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 80px 24px 48px;
+      text-align: center;
+      background: linear-gradient(180deg, #0d1117 0%, #111827 100%);
+    }
+    .page-header .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #4ade80;
+      margin-bottom: 12px;
+    }
+    .page-header h1 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    .page-header p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.5);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── GAME WRAPPER ── */
+    .game-outer {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 24px 80px;
+      background: #0d1117;
+    }
+
+    /* ─────────────── GAME (original code preserved) ─────────────── */
+    #wrap{position:relative;width:900px;height:650px;background:#0d1117;overflow:hidden;border-radius:20px;box-shadow:0 30px 100px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.06);}
+    #hud{position:absolute;top:0;left:0;right:0;height:44px;background:rgba(0,0,0,0.7);display:flex;align-items:center;padding:0 14px;gap:16px;z-index:10;border-radius:20px 20px 0 0;}
+    #score-label{color:#4ade80;font-size:13px;font-weight:700;letter-spacing:1px;}
+    #score-val{color:#fff;font-size:18px;font-weight:700;}
+    #rank-label{color:#facc15;font-size:12px;font-weight:600;}
+    #rank-val{color:#fff;font-size:14px;font-weight:700;}
+    #length-label{color:#60a5fa;font-size:12px;font-weight:600;}
+    #length-val{color:#fff;font-size:14px;font-weight:700;}
+    #leaderboard{position:absolute;top:50px;right:10px;background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;z-index:10;min-width:130px;}
+    #leaderboard h4{color:#facc15;font-size:11px;font-weight:700;margin-bottom:6px;letter-spacing:1px;}
+    .lb-row{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:#ccc;padding:2px 0;}
+    .lb-row.me{color:#4ade80;font-weight:700;}
+    .lb-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;}
+    #overlay{display:flex;position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.82);justify-content:center;align-items:center;flex-direction:column;z-index:20;border-radius:20px;}
+    #overlay h2{color:#4ade80;font-size:26px;font-weight:700;margin-bottom:8px;}
+    #overlay p{color:#9ca3af;font-size:13px;margin-bottom:20px;text-align:center;}
+    #start-btn{background:#4ade80;color:#052e16;font-size:15px;font-weight:700;padding:10px 32px;border:none;border-radius:24px;cursor:pointer;}
+    #start-btn:hover{background:#86efac;}
+    #death-score{color:#facc15;font-size:16px;margin-bottom:8px;}
+    #boost-bar-wrap{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;z-index:10;}
+    #boost-label{color:#fb923c;font-size:11px;font-weight:600;}
+    #boost-bg{width:120px;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;}
+    #boost-fill{height:100%;background:#fb923c;border-radius:4px;transition:width 0.1s;}
+
+    /* ── FOOTER ── */
+    footer {
+      background: #060a0f;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 32px 24px;
+      text-align: center;
+      color: rgba(255,255,255,0.25);
+      font-size: 13px;
+    }
+    footer a { color: rgba(255,255,255,0.35); text-decoration: none; margin: 0 8px; }
+    footer a:hover { color: rgba(255,255,255,0.7); }
+  </style>
+</head>
+<body id="page-top">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container px-4 px-lg-5">
+    <a class="navbar-brand" href="index.html">Julia Penrose</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+      Menu <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html#about">Resume</a></li>
+        <li class="nav-item"><a class="nav-link" href="scratch.html">Personal Interest</a></li>
+        <li class="nav-item"><a class="nav-link" href="app.html">Web App</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <p class="eyebrow">Web App</p>
+    <h1>Snake.io style game!</h1>
+    <p>Enjoy playing this multiplayer snake game! Don't get eaten by the other snakes!</p>
+  </div>
+
+  <!-- Game -->
+  <div class="game-outer">
+    <div id="wrap">
+      <div id="hud">
+        <span id="score-label">SCORE</span><span id="score-val">0</span>
+        <span id="rank-label">RANK</span><span id="rank-val">#1</span>
+        <span id="length-label">LENGTH</span><span id="length-val">5</span>
+        <span style="margin-left:auto;color:#6b7280;font-size:11px;">Mouse to steer &nbsp;|&nbsp; Hold click or Space to boost</span>
+      </div>
+      <canvas id="gc"></canvas>
+      <div id="leaderboard"><h4>LEADERBOARD</h4><div id="lb-body"></div></div>
+      <div id="boost-bar-wrap">
+        <span id="boost-label">BOOST</span>
+        <div id="boost-bg"><div id="boost-fill" style="width:100%"></div></div>
+      </div>
+      <div id="overlay">
+        <h2 id="overlay-title">Snake.io</h2>
+        <div id="death-score" style="display:none"></div>
+        <p id="overlay-msg">Eat glowing orbs to grow.<br>Cut off enemies to eliminate them.<br>Avoid running into other snakes!</p>
+        <button id="start-btn">Play</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div style="margin-bottom:8px;">
+      <a href="index.html">Resume</a>
+      <a href="scratch.html">Interests</a>
+      <a href="app.html">Web App</a>
+    </div>
+    Copyright &copy; Julia Penrose 2026
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+const WRAP=document.getElementById('wrap');
+const cvs=document.getElementById('gc');
+const ctx=cvs.getContext('2d');
+const W=900,H=650;
+cvs.width=W;cvs.height=H;
+
+const WORLD=3000,SEG=14,AI_COUNT=14,ORB_COUNT=350;
+const SPEED=2.2,BOOST_SPEED=4.2,BOOST_DRAIN=0.18,BOOST_REGEN=0.06;
+
+let gameRunning=false,camX=0,camY=0,player=null,bots=[],orbs=[],particles=[],frame=0,score=0,boost=100,mouseX=W/2,mouseY=H/2,boosting=false,animId=null;
+
+const COLORS=['#4ade80','#f87171','#60a5fa','#facc15','#e879f9','#34d399','#fb923c','#a78bfa','#f472b6','#38bdf8','#84cc16','#ff6b6b','#ffd166','#06d6a0'];
+const NAMES=['Zara','Nitro','Blaze','Viper','Ghost','Storm','Pixel','Comet','Flash','Spike','Drift','Neon','Apex','Fury'];
+
+function rand(a,b){return a+Math.random()*(b-a);}
+function randi(a,b){return Math.floor(rand(a,b+1));}
+function ang(ax,ay,bx,by){return Math.atan2(by-ay,bx-ax);}
+function lerp(a,b,t){let d=((b-a)+Math.PI*3)%(Math.PI*2)-Math.PI;return a+d*t;}
+function dst(ax,ay,bx,by){return Math.hypot(ax-bx,ay-by);}
+
+function makeSnake(x,y,color,name,isPlayer){
+  const segs=[];
+  for(let i=0;i<5;i++) segs.push({x:x-i*SEG,y});
+  return{x,y,segs,color,name,isPlayer,angle:0,alive:true,score:0,boost:100};
+}
+
+function spawnOrb(){return{x:rand(50,WORLD-50),y:rand(50,WORLD-50),r:rand(4,8),color:COLORS[randi(0,COLORS.length-1)],val:randi(1,3)};}
+
+function initGame(){
+  score=0;boost=100;frame=0;particles=[];
+  player=makeSnake(rand(400,WORLD-400),rand(400,WORLD-400),'#4ade80','You',true);
+  bots=[];
+  for(let i=0;i<AI_COUNT;i++){
+    const b=makeSnake(rand(100,WORLD-100),rand(100,WORLD-100),COLORS[(i+1)%COLORS.length],NAMES[i%NAMES.length],false);
+    b.score=randi(0,60);
+    for(let j=0;j<b.score/4;j++) b.segs.push({...b.segs[b.segs.length-1]});
+    bots.push(b);
+  }
+  orbs=[];
+  for(let i=0;i<ORB_COUNT;i++) orbs.push(spawnOrb());
+}
+
+function updatePlayer(){
+  if(!player.alive)return;
+  const ta=ang(player.x,player.y,camX+mouseX,camY+mouseY);
+  player.angle=lerp(player.angle,ta,0.18);
+  const spd=boosting&&boost>0?BOOST_SPEED:SPEED;
+  if(boosting&&boost>0)boost=Math.max(0,boost-BOOST_DRAIN);
+  else boost=Math.min(100,boost+BOOST_REGEN);
+  player.x=Math.max(10,Math.min(WORLD-10,player.x+Math.cos(player.angle)*spd));
+  player.y=Math.max(10,Math.min(WORLD-10,player.y+Math.sin(player.angle)*spd));
+  player.segs.unshift({x:player.x,y:player.y});
+  if(player.segs.length>5+score/2) player.segs.pop();
+  document.getElementById('boost-fill').style.width=Math.round(boost)+'%';
+}
+
+function updateBot(b){
+  if(!b.alive)return;
+  let tx=b.x+Math.cos(b.angle)*200,ty=b.y+Math.sin(b.angle)*200,bd=999;
+  orbs.forEach(o=>{const d=dst(b.x,b.y,o.x,o.y);if(d<bd&&d<300){bd=d;tx=o.x;ty=o.y;}});
+  if(Math.random()<0.003){tx=rand(100,WORLD-100);ty=rand(100,WORLD-100);}
+  if(b.x<80)tx=WORLD/2;if(b.x>WORLD-80)tx=WORLD/2;
+  if(b.y<80)ty=WORLD/2;if(b.y>WORLD-80)ty=WORLD/2;
+  b.angle=lerp(b.angle,ang(b.x,b.y,tx,ty),0.1);
+  const spd=Math.random()<0.05?BOOST_SPEED*0.9:SPEED;
+  b.x=Math.max(10,Math.min(WORLD-10,b.x+Math.cos(b.angle)*spd));
+  b.y=Math.max(10,Math.min(WORLD-10,b.y+Math.sin(b.angle)*spd));
+  b.segs.unshift({x:b.x,y:b.y});
+  if(b.segs.length>5+b.score/2) b.segs.pop();
+}
+
+function checkOrbs(snake){
+  for(let i=orbs.length-1;i>=0;i--){
+    const o=orbs[i];
+    if(dst(snake.x,snake.y,o.x,o.y)<SEG+o.r-2){
+      splat(o.x,o.y,o.color,5);orbs.splice(i,1);orbs.push(spawnOrb());
+      if(snake.isPlayer){score+=o.val;document.getElementById('score-val').textContent=score;document.getElementById('length-val').textContent=Math.round(snake.segs.length);}
+      else snake.score+=o.val;
+    }
+  }
+}
+
+function checkCollisions(){
+  const all=[player,...bots].filter(s=>s.alive);
+  all.forEach(s=>{
+    if(!s.alive)return;
+    all.forEach(other=>{
+      if(!other.alive)return;
+      const start=s===other?5:0;
+      for(let i=start;i<other.segs.length;i++){
+        if(dst(s.x,s.y,other.segs[i].x,other.segs[i].y)<SEG-2){
+          if(s===other)return;
+          kill(s,other);return;
+        }
+      }
+    });
+  });
+}
+
+function kill(snake,killer){
+  snake.alive=false;
+  splat(snake.x,snake.y,snake.color,30);
+  for(let i=0;i<Math.min(snake.segs.length,40);i+=2){
+    const s=snake.segs[i];orbs.push({x:s.x,y:s.y,r:5,color:snake.color,val:2});
+  }
+  if(snake.isPlayer){gameRunning=false;if(killer)killer.score+=Math.floor(snake.segs.length/2);showDeath();}
+  else{
+    if(killer&&killer.isPlayer){score+=Math.floor(snake.segs.length/2);document.getElementById('score-val').textContent=score;}
+    setTimeout(()=>{
+      const idx=bots.indexOf(snake);
+      if(idx>=0) bots[idx]=makeSnake(rand(100,WORLD-100),rand(100,WORLD-100),COLORS[randi(0,COLORS.length-1)],NAMES[randi(0,NAMES.length-1)],false);
+    },3000);
+  }
+}
+
+function splat(x,y,color,n){
+  for(let i=0;i<n;i++){const a=rand(0,Math.PI*2),sp=rand(1,5);particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,color,life:50,maxLife:50});}
+}
+
+function updateParticles(){
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vx*=0.92;p.vy*=0.92;p.life--;if(p.life<=0)particles.splice(i,1);}
+}
+
+function updateLB(){
+  const all=[{name:'You',score,color:'#4ade80',me:true},...bots.filter(b=>b.alive).map(b=>({name:b.name,score:b.score,color:b.color,me:false}))];
+  all.sort((a,b)=>b.score-a.score);
+  document.getElementById('rank-val').textContent='#'+(all.findIndex(e=>e.me)+1);
+  document.getElementById('lb-body').innerHTML=all.slice(0,5).map(e=>`<div class="lb-row${e.me?' me':''}"><span><span class="lb-dot" style="background:${e.color}"></span>${e.name}</span><span>${e.score}</span></div>`).join('');
+}
+
+function draw(){
+  ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+  if(player.alive){camX=Math.max(0,Math.min(WORLD-W,player.x-W/2));camY=Math.max(0,Math.min(WORLD-H,player.y-H/2));}
+  ctx.strokeStyle='rgba(255,255,255,0.03)';ctx.lineWidth=1;
+  const gs=80,sx=Math.floor(camX/gs)*gs,sy=Math.floor(camY/gs)*gs;
+  for(let x=sx;x<camX+W;x+=gs){ctx.beginPath();ctx.moveTo(x-camX,0);ctx.lineTo(x-camX,H);ctx.stroke();}
+  for(let y=sy;y<camY+H;y+=gs){ctx.beginPath();ctx.moveTo(0,y-camY);ctx.lineTo(W,y-camY);ctx.stroke();}
+  ctx.strokeStyle='rgba(239,68,68,0.5)';ctx.lineWidth=6;ctx.strokeRect(-camX,-camY,WORLD,WORLD);
+  ctx.strokeStyle='rgba(239,68,68,0.12)';ctx.lineWidth=30;ctx.strokeRect(-camX,-camY,WORLD,WORLD);
+  orbs.forEach(o=>{
+    const ox=o.x-camX,oy=o.y-camY;
+    if(ox<-20||ox>W+20||oy<-20||oy>H+20)return;
+    const p=0.85+Math.sin(frame*0.1+o.x)*0.15;
+    ctx.fillStyle=o.color;ctx.globalAlpha=0.9;ctx.beginPath();ctx.arc(ox,oy,o.r*p,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=0.3;ctx.beginPath();ctx.arc(ox,oy,o.r*p+3,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+  });
+  [...bots,player].forEach(snake=>{
+    if(!snake.alive)return;
+    const segs=snake.segs;
+    for(let i=segs.length-1;i>=0;i--){
+      const s=segs[i],sx2=s.x-camX,sy2=s.y-camY;
+      if(sx2<-SEG*2||sx2>W+SEG*2||sy2<-SEG*2||sy2>H+SEG*2)continue;
+      const t=i/segs.length,r=SEG*(0.55+0.45*(1-t));
+      ctx.globalAlpha=0.85+0.15*(1-t);ctx.fillStyle=snake.color;ctx.beginPath();ctx.arc(sx2,sy2,r,0,Math.PI*2);ctx.fill();
+      if(i===0){
+        ctx.globalAlpha=0.35;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(sx2-r*0.25,sy2-r*0.25,r*0.35,0,Math.PI*2);ctx.fill();
+        ctx.globalAlpha=1;ctx.fillStyle='#111';
+        const e1x=Math.cos(snake.angle+0.4)*r*0.6,e1y=Math.sin(snake.angle+0.4)*r*0.6;
+        const e2x=Math.cos(snake.angle-0.4)*r*0.6,e2y=Math.sin(snake.angle-0.4)*r*0.6;
+        ctx.beginPath();ctx.arc(sx2+e1x,sy2+e1y,r*0.18,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(sx2+e2x,sy2+e2y,r*0.18,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='rgba(255,255,255,0.9)';
+        ctx.beginPath();ctx.arc(sx2+e1x+1,sy2+e1y-1,r*0.07,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(sx2+e2x+1,sy2+e2y-1,r*0.07,0,Math.PI*2);ctx.fill();
+      }
+      ctx.globalAlpha=1;
+    }
+    const hx=segs[0].x-camX,hy=segs[0].y-camY;
+    if(hx>-50&&hx<W+50&&hy>-50&&hy<H+50){
+      ctx.font='bold 11px Arial';ctx.textAlign='center';
+      const tw=ctx.measureText(snake.name).width;
+      ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(hx-tw/2-4,hy-SEG-18,tw+8,14);
+      ctx.fillStyle=snake.isPlayer?'#4ade80':'#fff';ctx.fillText(snake.name,hx,hy-SEG-7);
+    }
+  });
+  particles.forEach(p=>{ctx.globalAlpha=p.life/p.maxLife*0.9;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x-camX,p.y-camY,3*(p.life/p.maxLife),0,Math.PI*2);ctx.fill();});
+  ctx.globalAlpha=1;
+  const mw=90,mh=90,mx=10,my=H-100,sc=mw/WORLD;
+  ctx.fillStyle='rgba(0,0,0,0.55)';ctx.beginPath();ctx.roundRect(mx,my,mw,mh,6);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=1;ctx.stroke();
+  orbs.slice(0,80).forEach(o=>{ctx.fillStyle=o.color;ctx.globalAlpha=0.5;ctx.beginPath();ctx.arc(mx+o.x*sc,my+o.y*sc,1.5,0,Math.PI*2);ctx.fill();});
+  ctx.globalAlpha=1;
+  bots.filter(b=>b.alive).forEach(b=>{ctx.fillStyle=b.color;ctx.beginPath();ctx.arc(mx+b.x*sc,my+b.y*sc,2.5,0,Math.PI*2);ctx.fill();});
+  if(player.alive){ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(mx+player.x*sc,my+player.y*sc,3.5,0,Math.PI*2);ctx.fill();}
+}
+
+function showDeath(){
+  document.getElementById('overlay-title').textContent='Game Over';
+  document.getElementById('death-score').style.display='block';
+  document.getElementById('death-score').textContent='Score: '+score;
+  document.getElementById('overlay-msg').textContent='You got eaten! Better luck next time.';
+  document.getElementById('start-btn').textContent='Play Again';
+  document.getElementById('overlay').style.display='flex';
+}
+
+function loop(){
+  if(!gameRunning)return;
+  frame++;
+  bots.forEach(b=>{updateBot(b);checkOrbs(b);});
+  updatePlayer();checkOrbs(player);
+  if(frame%3===0)checkCollisions();
+  updateParticles();
+  draw();
+  if(frame%20===0)updateLB();
+  animId=requestAnimationFrame(loop);
+}
+
+document.getElementById('start-btn').addEventListener('click',()=>{
+  if(animId)cancelAnimationFrame(animId);
+  document.getElementById('overlay').style.display='none';
+  initGame();gameRunning=true;loop();
+});
+WRAP.addEventListener('mousemove',e=>{const r=cvs.getBoundingClientRect();mouseX=e.clientX-r.left;mouseY=e.clientY-r.top;});
+WRAP.addEventListener('mousedown',()=>boosting=true);
+WRAP.addEventListener('mouseup',()=>boosting=false);
+document.addEventListener('keydown',e=>{if(e.code==='Space'){boosting=true;e.preventDefault();}});
+document.addEventListener('keyup',e=>{if(e.code==='Space')boosting=false;});
+WRAP.addEventListener('touchmove',e=>{e.preventDefault();const r=cvs.getBoundingClientRect();mouseX=e.touches[0].clientX-r.left;mouseY=e.touches[0].clientY-r.top;},{passive:false});
+WRAP.addEventListener('touchstart',e=>{boosting=true;const r=cvs.getBoundingClientRect();mouseX=e.touches[0].clientX-r.left;mouseY=e.touches[0].clientY-r.top;});
+WRAP.addEventListener('touchend',()=>boosting=false);
+  </script>
+</body>
+</html>

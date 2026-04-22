@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Julia Penrose — Hiking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/scratch.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="top">
+    <div class="nav-inner">
+      <div class="logo">Julia Penrose</div>
+      <div class="links">
+        <a href="index.html">Resume</a>
+        <a href="scratch.html" class="active">Personal Interest</a>
+        <a href="app.html">Web App</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <span class="hero-eyebrow">A Personal Passion</span>
+      <h1>Hiking the<br><em>Pacific Northwest</em></h1>
+      <p>Exploring mountains, lakes, and quiet places</p>
+      <div class="hero-line"></div>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section class="section">
+    <div class="grid">
+      <div class="section-label">
+        <span>01</span>
+        <h2>Why I Hike</h2>
+      </div>
+      <div class="section-body">
+        <p>
+          Hiking gives me a way to reset and refocus. Growing up in the Pacific Northwest,
+          I developed a strong connection to mountains and alpine environments.
+          Whether it's a short trail or a full-day hike, I value both the challenge
+          and the clarity that comes with it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAILS -->
+  <section class="section alt">
+    <div class="grid">
+      <div class="section-label">
+        <span>02</span>
+        <h2>Favorite Trails</h2>
+      </div>
+      <div class="section-body">
+        <ol class="trail-list">
+          <li>
+            <div class="trail-header">
+              <span class="trail-num">01</span>
+              <strong>Snow Lake</strong>
+            </div>
+            <ul>
+              <li>8 miles round trip</li>
+              <li>Alpine lake views</li>
+            </ul>
+          </li>
+          <li>
+            <div class="trail-header">
+              <span class="trail-num">02</span>
+              <strong>Skyline Trail</strong>
+            </div>
+            <ul>
+              <li>Views of Mt. Rainier</li>
+              <li>Steep elevation gain</li>
+            </ul>
+          </li>
+          <li>
+            <div class="trail-header">
+              <span class="trail-num">03</span>
+              <strong>Wallace Falls</strong>
+            </div>
+            <ul>
+              <li>Waterfall viewpoints</li>
+              <li>Challenging incline</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <!-- TABLEAU -->
+<section class="section">
+  <div class="grid">
+    <div class="section-label">
+      <span>05</span>
+      <h2>Hike Finder</h2>
+    </div>
+    <div class="section-body">
+      <div class="tableauPlaceholder" style="width:100%; max-width:740px;">
+        <object class="tableauViz" style="display:none;">
+          <param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F" />
+          <param name="embed_code_version" value="3" />
+          <param name="site_root" value="" />
+          <param name="name" value="WashingtonStateHikeFinder/WAHikeFinder" />
+          <param name="tabs" value="no" />
+          <param name="toolbar" value="yes" />
+        </object>
+      </div>
+      <script src="https://public.tableau.com/javascripts/api/viz_v1.js"></script>
+      <script>
+        var divElement = document.querySelector('.tableauPlaceholder');
+        var vizElement = divElement.getElementsByTagName('object')[0];
+        vizElement.style.width = '100%';
+        vizElement.style.height = '600px';
+      </script>
+    </div>
+  </div>
+</section>
+  </section>
+
+  <!-- IMAGE -->
+  <section class="section">
+    <div class="grid">
+      <div class="section-label">
+        <span>03</span>
+        <h2>Favorite View</h2>
+      </div>
+      <div class="section-body">
+        <figure class="photo-frame">
+          <img src="assets/img/Snow Lake.JPG" alt="Snow Lake, Washington">
+          <figcaption>Snow Lake — North Cascades, WA</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="section alt">
+    <div class="grid">
+      <div class="section-label">
+        <span>04</span>
+        <h2>Inspiration</h2>
+      </div>
+      <div class="section-body">
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/r6bWwz1mHkM" allowfullscreen title="Hiking Inspiration Video"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>© Julia Penrose 2026</p>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP -->
+  <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Back to top">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script>
+    const btn = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+    });
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Fade-in on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.section').forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>
